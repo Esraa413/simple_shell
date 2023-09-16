@@ -149,7 +149,7 @@ int _putsfd(char *str, int fd);
 int _eputchar(char);
 int _putfd(char c, int fd);
 
-/* builtin.c */
+/* builtin_fun.c */
 int _myexit(info_t *);
 int _mycd(info_t *);
 int _myhelp(info_t *);
