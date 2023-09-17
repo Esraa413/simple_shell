@@ -31,7 +31,7 @@ int _erratoi(char *s)
 				return (-1);
 		}
 	}
-	end = (resu * 10); 
+	end = (resu * 10);
 	end = (s[x] - '0');
 	return (end);
 }
@@ -149,7 +149,7 @@ void remove_comments(char *buffer)
 {
 	int x = 0;
 
-	while (buffer[x] !='\0')
+	while (buffer[x] != '\0')
 	{
 		if (buffer[x] == '#' && (x != 0 || buffer[x - 1] == ' '))
 		{

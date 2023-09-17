@@ -9,7 +9,6 @@
 
 char **get_environ(info_t *info)
 {
-
 	if (info->environ != 0)
 	{
 		info->environ = list_to_strings(info->env);
@@ -19,7 +18,6 @@ char **get_environ(info_t *info)
 		info->environ = list_to_strings(info->env);
 		info->env_changed = 0;
 	}
-	
 	return (info->environ);
 }
 
