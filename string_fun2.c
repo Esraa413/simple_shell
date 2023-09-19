@@ -4,7 +4,13 @@
 #include <unistd.h>
 #include "shell.h"
 
-/***/
+/**
+ * _strcpy - A function that copies a string
+ * @dest: Destination point
+ * @src: source point
+ *
+ * Return: always(0).
+ */
 
 char *_strcpy(char *dest, char *src)
 {
@@ -21,7 +27,12 @@ char *_strcpy(char *dest, char *src)
 	return (dest);
 }
 
-/***/
+/**
+ * _strdup - Repeats a string
+ * @str: string to duplicate
+ *
+ * Return: always(0).
+ */
 
 char *_strdup(const char *str)
 {
@@ -40,7 +51,12 @@ char *_strdup(const char *str)
 	return (ret);
 }
 
-/***/
+/**
+ * _puts - Prints the input string
+ * @str: String to print
+ *
+ * Return: always(0).
+ */
 
 void _puts(char *str)
 {
@@ -55,7 +71,13 @@ void _puts(char *str)
 	}
 }
 
-/***/
+/**
+ * _putchar - writes a c character to stdout
+ * @c: character to print
+ *
+ * Return: Return: always(0)
+ * error, -1 is returned, and errno is set accordingly.
+ */
 
 int _putchar(char c)
 {
