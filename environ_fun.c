@@ -33,7 +33,7 @@ char *_getenv(info_t *info, const char *name)
 		if (p && p[y])
 		{
 			return (p);
-		}	
+		}
 		node = node->next;
 	}
 	return (NULL);
