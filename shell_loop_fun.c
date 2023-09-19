@@ -72,7 +72,7 @@ int find_builtin(info_t *info)
 		if (_strcmp(info->argv[0], builtintbl[x].type) == 0)
 		{
 			info->line_count++;
-			built_in_r = builtintbl[i].func(info);
+			built_in_r = builtintbl[x].func(info);
 			break;
 		}
 	return (built_in_r);
@@ -84,7 +84,7 @@ int find_builtin(info_t *info)
  * Return: returns void
 */
 
-oid find_cmd(info_t *info)
+void find_cmd(info_t *info)
 {
 	char *path = NULL;
 	int x, y;
