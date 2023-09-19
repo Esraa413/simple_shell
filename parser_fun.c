@@ -8,7 +8,7 @@
  * is_cmd - function to determine the file is executable command
  * @info: input of info structure
  * @path: input of path of file
- * Return: returns 1 if success, returns 0 if error
+ * Return: returns (1) if success, returns 0 if error
 */
 
 int is_cmd(info_t *info, char *path)
