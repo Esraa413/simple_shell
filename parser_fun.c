@@ -8,7 +8,7 @@
  * is_cmd - function to determine the file is executable command
  * @info: input of info structure
  * @path: input of path of file
- * Retuen: returns 1 if success, returns 0 if error
+ * Return: returns 1 if success, returns 0 if error
 */
 
 int is_cmd(info_t *info, char *path)
@@ -31,7 +31,7 @@ int is_cmd(info_t *info, char *path)
  * @pathstr: input string
  * @start: input starting index
  * @stop: input stopping index
- * Retuen: returns the pointer of new buffer
+ * Return: returns the pointer of new buffer
 */
 
 char *dup_chars(char *pathstr, int start, int stop)
