@@ -28,20 +28,24 @@ void set_info(info_t *info, char **av)
 	info->fname = av[0];
 	if (info->arg)
 	{
-		info->argv = strtow(info->arg, " \n\t");
-		if (info->argv != 0)
+		info->argv = strtow(info->arg, " \t");
+		if (!info->argv)
 		{
 			info->argv = malloc(sizeof(char *) * 2);
-			info->argv[1] = 0;
+			if (info->argv)
+			{
+				info->argv[0] = _strdup(info->arg);
+				info->argv[1] = NULL;
+			}
 		}
+		while (info->argv && info->argv[var])
+		{
+			var++;
+		}
+		info->argc = var;
+		replace_alias(info);
+		replace_vars(info);
 	}
-	while (info->argv && info->argv[var])
-	{
-		var++;
-	}
-	info->argc = var;
-	replace_alias(info);
-	replace_vars(info);
 }
 
 /**
@@ -58,11 +62,11 @@ void free_info(info_t *info, int all)
 	info->path = NULL;
 	if (all)
 	{
-		if (info->cmd_buf != 0)
+		if (!info->cmd_buf)
 		{
 			free(info->arg);
 		}
-		else if (info->environ)
+		else if (info->env)
 		{
 			free_list(&(info->env));
 		}
@@ -75,12 +79,12 @@ void free_info(info_t *info, int all)
 			free_list(&(info->alias));
 		}
 		ffree(info->environ);
-		info->environ = 0;
+			info->environ = NULL;
 		bfree((void **)info->cmd_buf);
 		if (info->readfd > 2)
 		{
 			close(info->readfd);
 		}
-		_putchar(-1);
+		_putchar(BUF_FLUSH);
 	}
 }
