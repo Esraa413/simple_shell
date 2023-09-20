@@ -14,6 +14,7 @@ int _erratoi(char *s)
 
 	if (*s == '+')
 		s++;  /* TODO: why  make main return 255? */
+	x = 0;
 	while (s[x] != '\0')
 	{
 		x++;
@@ -142,10 +143,12 @@ void remove_comments(char *buf)
 
 	x = 0;
 	while (buf[x] != '\0')
+	{
 		if (buf[x] == '#' && (!x || buf[x - 1] == ' '))
 		{
 			buf[x] = '\0';
 			break;
 		}
 	x++;
+	}
 }
