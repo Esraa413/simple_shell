@@ -82,7 +82,6 @@ int print_alias(list_t *node)
 	if (node)
 	{
 		p = _strchr(node->str, '=');
-		a = node->str;
 		while (a <= p)
 		{
 		_putchar(*a);
@@ -91,6 +90,7 @@ int print_alias(list_t *node)
 		_puts("'\n");
 		return (0);
 		}
+		a = node->str;
 		a++;
 	}
 	return (1);
