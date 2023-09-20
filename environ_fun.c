@@ -9,7 +9,7 @@
 
 int _myenv(info_t *info)
 {
-	print_list(info->env);
+	print_list_str(info->env);
 	return (0);
 }
 
@@ -23,14 +23,13 @@ int _myenv(info_t *info)
 
 char *_getenv(info_t *info, const char *name)
 {
-	int x, y = 0;
 	list_t *node = info->env;
 	char *p;
 
-	for (x = 0; node; x++)
+	while (node)
 	{
 		p = starts_with(node->str, name);
-		if (p && p[y])
+		if (p && *p)
 		{
 			return (p);
 		}
@@ -50,7 +49,7 @@ int _mysetenv(info_t *info)
 {
 	if (info->argc != 3)
 	{
-		_eputs(" correct number of argument\n\t");
+		_eputs("Incorrect number of arguements\n");
 		return (1);
 	}
 	if (_setenv(info, info->argv[1], info->argv[2]))
@@ -69,18 +68,20 @@ int _mysetenv(info_t *info)
 
 int _myunsetenv(info_t *info)
 {
-	int var = 1;
+	int x;
 
 	if (info->argc == 1)
 	{
-		_eputs(" Too match few argument.\n");
+		_eputs("Too few arguements.\n");
 		return (1);
 	}
-	while (var <= info->argc)
+	x = 1;
+	while (x <= info->argc)
 	{
-		_unsetenv(info, info->argv[var]);
-		var++;
+		_unsetenv(info, info->argv[x]);
+		x++;
 	}
+
 	return (0);
 }
 
@@ -93,15 +94,15 @@ int _myunsetenv(info_t *info)
 
 int populate_env_list(info_t *info)
 {
-	size_t var = 0;
 	list_t *node = NULL;
+	size_t x;
 
-	while (environ[var])
+	x = 0;
+	while (environ[x])
 	{
-		add_node_end(&node, environ[var], 0);
-		var++;
+		add_node_end(&node, environ[x], 0);
+		x++;
 	}
 	info->env = node;
-
 	return (0);
 }

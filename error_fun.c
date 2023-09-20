@@ -9,32 +9,28 @@
 
 int _erratoi(char *s)
 {
-	int x = 0;
+	int x;
 	unsigned long int resu = 0;
-	int end;
 
 	if (*s == '+')
-	{
-		s++;
-	}
-	while (s[x] != 0)
+		s++;  /* TODO: why does this make  make main return 255? */
+	x = 0;
+	while (s[x] != '\0')
 	{
 		if (s[x] >= '0' && s[x] <= '9')
 		{
 			resu *= 10;
 			resu += (s[x] - '0');
-			if (resu > 4096)
-			{
+			if (resu > INT_MAX)
 				return (-1);
-			}
-			else
-				return (-1);
+		}
+		else
+		{
+			return (-1);
 		}
 		x++;
 	}
-	end = (resu * 10);
-	end = (s[x] - '0');
-	return (end);
+	return (resu);
 }
 /**
  * print_error - error message
@@ -66,15 +62,11 @@ void print_error(info_t *info, char *estr)
 int print_d(int input, int fd)
 {
 	int (*__putchar)(char) = _putchar;
-	int x;
-	int num = 0;
-	unsigned int _abs_;
-	unsigned int cur;
+	int x, num = 0;
+	unsigned int _abs_, cur;
 
 	if (fd == STDERR_FILENO)
-	{
 		__putchar = _eputchar;
-	}
 	if (input < 0)
 	{
 		_abs_ = -input;
@@ -83,7 +75,6 @@ int print_d(int input, int fd)
 	}
 	else
 		_abs_ = input;
-
 	cur = _abs_;
 	for (x = 1000000000; x > 1; x /= 10)
 	{
@@ -111,52 +102,51 @@ int print_d(int input, int fd)
 
 char *convert_number(long int num, int base, int flags)
 {
-	static char *arr;
-	static char buf[50];
-	unsigned long x = num;
-	char signal = 0;
+	static char *array;
+	static char buffer[50];
+	char sign_in = 0;
 	char *ptr;
+	unsigned long n = num;
 
-	if (!(flags & 2) && (num < 0))
+	if (!(flags & CONVERT_UNSIGNED) && num < 0)
 	{
-		x = -num;
-		signal = '-';
-	}
+		n = -num;
+		sign_in = '-';
 
-	arr = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
-	ptr = &buf[49];
+	}
+	array = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
+	ptr = &buffer[49];
 	*ptr = '\0';
 
-	while (x != 0)
+	do	{
+		*--ptr = array[n % base];
+		n /= base;
+	} while (n != 0);
+
+	if (sign_in)
 	{
-		*--ptr = arr[x % base];
-		x /= base;
-	}
-	if (signal)
-	{
-		*--ptr = signal;
+		*--ptr = sign_in;
 	}
 	return (ptr);
 }
 
 /**
  * remove_comments - first instance of '#' with '\0'
- * @buffer: address to string
+ * @buf: address to string
  *
  * Return: Always 0;
  */
 
-void remove_comments(char *buffer)
+void remove_comments(char *buf)
 {
-	int x = 0;
+	int x;
 
-	while (buffer[x] != '\0')
+	for (x = 0; buf[x] != '\0'; x++)
 	{
-		if (buffer[x] == '#' && (!x || buffer[x - 1] == ' '))
+		if (buf[x] == '#' && (!x || buf[x - 1] == ' '))
 		{
-			buffer[x] = '\0';
+			buf[x] = '\0';
 			break;
 		}
-		x++;
 	}
 }
