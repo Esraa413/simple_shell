@@ -82,16 +82,12 @@ int print_alias(list_t *node)
 	if (node)
 	{
 		p = _strchr(node->str, '=');
-		while (a <= p)
-		{
+		for (a = node->str; a <= p; a++)
 		_putchar(*a);
 		_putchar('\'');
 		_puts(p + 1);
 		_puts("'\n");
 		return (0);
-		}
-		a = node->str;
-		a++;
 	}
 	return (1);
 }
