@@ -32,7 +32,7 @@ char **strtow(char *str, char *d)
 	for (i = 0, j = 0; j < numwords; j++)
 	{
 		while (is_delim(str[i], d))
-			j++;
+			i++;
 		k = 0;
 		while (!is_delim(str[i + k], d) && str[i + k])
 			k++;
