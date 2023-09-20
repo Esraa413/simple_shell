@@ -17,9 +17,9 @@ int _myexit(info_t *info)
 		if (exit == -1)
 		{
 			info->status = 2;
-			puts(info->argv[1]);
 			print_error(info, "ElLegal number: \t");
-			putchar('\n');
+			_eputs(info->argv[1]);
+			_eputchar('\n');
 			return (1);
 		}
 		info->err_num = _erratoi(info->argv[1]);
@@ -43,12 +43,12 @@ int _mycd(info_t *info)
 	int chdir_r;
 
 	s = getcwd(buf, 1024);
-	if (s != 0)
-		puts("To do: >> geodetic failure ems here << \n\t");
+	if (!s)
+		_puts("To do: >> geodetic failure ems here << \n\t");
 	if (!info->argv[1])
 	{
 		dir = _getenv(info, "Home=");
-		if (dir != 0)
+		if (!dir)
 			chdir_r =
 				chdir((dir = _getenv(info, " PWD = ")) ? dir : "/");
 		else
@@ -58,11 +58,11 @@ int _mycd(info_t *info)
 	{
 		if (_getenv(info, "OLDPWD=") != 0)
 		{
-			puts(s);
+			_puts(s);
 			_putchar('\n');
 			return (1);
 		}
-		puts(_getenv(info, " OLD PWD = ")), _putchar('\n');
+		_puts(_getenv(info, " OLD PWD = ")), _putchar('\n');
 		chdir_r =
 			chdir((dir = _getenv(info, " OLD PWD = ")) ? dir : " / ");
 	}
@@ -70,8 +70,8 @@ int _mycd(info_t *info)
 		chdir_r = chdir(info->argv[1]);
 	if (chdir_r == -1)
 	{
-		print_error(info, " can't exist \t\n");
-		puts(info->argv[1]), _putchar('\n');
+		print_error(info, " can't cd ");
+		_eputs(info->argv[1]), _eputchar('\n');
 	}
 	else
 	{
@@ -93,10 +93,10 @@ int _myhelp(info_t *info)
 	char **arg_arr;
 
 	arg_arr = info->argv;
-	puts(" call works. not yet implemented \n\t");
+	_puts(" call works. not yet implemented \n");
 	if (0)
 	{
-		puts(*arg_arr);
+		_puts(*arg_arr);
 	}
 	return (0);
 }

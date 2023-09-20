@@ -11,7 +11,7 @@ void _eputs(char *str)
 {
 	int x;
 
-	if (str != 0)
+	if (!str)
 	{
 		return;
 	}
@@ -22,29 +22,32 @@ void _eputs(char *str)
 }
 
 /**
- * _putsfd - function that prints the input string
- * @str: the input string
- * @fd: The file to be written to
+ * _eputchar - Writes the letter c
+ * @c: printed character
  *
  * Return: always(0)
  */
 
-int _putsfd(char *str, int fd)
+int _eputchar(char c)
 {
-	int x = 0;
-	int y;
+	static int x;
+	static char buffer[1024];
 
-	if (str != 0)
+	if (c == -1)
 	{
-		return (0);
+		write(2, buffer, x);
+		x = 0;
 	}
-	for (y = 0; str[y] != '\0'; y++)
+	else if (x >= 1024)
 	{
-		x += _putsfd(str++, fd);
-		x = y;
+		write(2, buffer, x);
+		x = 0;
 	}
-	return (y);
-
+	if (c != -1)
+	{
+		buffer[x++] = c;
+	}
+	return (1);
 }
 
 /**
@@ -78,30 +81,26 @@ int _putfd(char c, int fd)
 }
 
 /**
- * _eputchar - Writes the letter c
- * @c: printed character
+ * _putsfd - function that prints the input string
+ * @str: the input string
+ * @fd: The file to be written to
  *
  * Return: always(0)
  */
 
-int _eputchar(char c)
+int _putsfd(char *str, int fd)
 {
-	static int x;
-	static char buffer[1024];
+	int x = 0;
+	int y;
 
-	if (c == -1)
+	if (!str)
 	{
-		write(2, buffer, x);
-		x = 0;
+		return (0);
 	}
-	else if (x >= 1024)
+	for (y = 0; str[y]; y++)
 	{
-		write(2, buffer, x);
-		x = 0;
+		x += _putsfd(str[y]++, fd);
 	}
-	if (c != -1)
-	{
-		buffer[x++] = c;
-	}
-	return (1);
+	return (x);
+
 }

@@ -50,7 +50,7 @@ int _mysetenv(info_t *info)
 {
 	if (info->argc != 3)
 	{
-		puts(" correct number of argument\n\t");
+		_eputs(" correct number of argument\n\t");
 		return (1);
 	}
 	if (_setenv(info, info->argv[1], info->argv[2]))
@@ -73,7 +73,7 @@ int _myunsetenv(info_t *info)
 
 	if (info->argc == 1)
 	{
-		puts(" Too match few argument.\n\t");
+		_eputs(" Too match few argument.\n");
 		return (1);
 	}
 	while (var <= info->argc)
