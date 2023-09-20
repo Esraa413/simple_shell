@@ -123,7 +123,7 @@ int _myalias(info_t *info)
 		p = _strchr(info->argv[x], '=');
 		if (p)
 		{
-			set_alias(info, info->argv[]);
+			set_alias(info, info->argv[x]);
 		}
 		else
 		{
