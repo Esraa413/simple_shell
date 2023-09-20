@@ -13,17 +13,17 @@
 
 int hsh(info_t *info, char **av)
 {
-	ssize_t r = 0;
+	ssize_t m = 0;
 	int builtin_ret = 0;
 
-	while (r != -1 && builtin_ret != -2)
+	while (m != -1 && builtin_ret != -2)
 	{
 		clear_info(info);
 		if (interactive(info))
 			_puts("$ ");
 		_eputchar(BUF_FLUSH);
-		r = get_input(info);
-		if (r != -1)
+		m = get_input(info);
+		if (m != -1)
 		{
 			set_info(info, av);
 			builtin_ret = find_builtin(info);
@@ -50,7 +50,7 @@ int hsh(info_t *info, char **av)
 /**
  * find_builtin - function to find a builtin command
  * @info: input
- * Return: void
+ * Return: returns void
 */
 
 int find_builtin(info_t *info)
@@ -81,13 +81,13 @@ int find_builtin(info_t *info)
 /**
  * find_cmd - function to find a command
  * @info: input
- * Return: void
+ * Return: returns void
 */
 
 void find_cmd(info_t *info)
 {
 	char *path = NULL;
-	int i, k;
+	int i, y;
 
 	info->path = info->argv[0];
 	if (info->linecount_flag == 1)
@@ -95,10 +95,10 @@ void find_cmd(info_t *info)
 		info->line_count++;
 		info->linecount_flag = 0;
 	}
-	for (i = 0, k = 0; info->arg[i]; i++)
+	for (i = 0, y = 0; info->arg[i]; i++)
 		if (!is_delim(info->arg[i], " \t\n"))
-			k++;
-	if (!k)
+			y++;
+	if (!y)
 		return;
 
 	path = find_path(info, _getenv(info, "PATH="), info->argv[0]);
@@ -123,7 +123,7 @@ void find_cmd(info_t *info)
 /**
  * fork_cmd - funtion to fork exce thread
  * @info: input
- * Return: void
+ * Return: returns void
 */
 
 void fork_cmd(info_t *info)
