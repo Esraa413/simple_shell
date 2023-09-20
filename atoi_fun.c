@@ -22,13 +22,16 @@ int interactive(info_t *info)
 
 int is_delim(char c, char *delim)
 {
+<<<<<<< HEAD
 	int x;
 
 	for (x = 0; *delim; x++)
 	{
+=======
+	while (*delim)
+>>>>>>> fb84cee8d69f9af85b6a040048792b08d6aa627b
 		if (*delim++ == c)
 			return (1);
-	}
 	return (0);
 }
 
@@ -42,9 +45,11 @@ int is_delim(char c, char *delim)
 int _isalpha(int c)
 {
 	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+<<<<<<< HEAD
 	{
+=======
+>>>>>>> fb84cee8d69f9af85b6a040048792b08d6aa627b
 		return (1);
-	}
 	else
 	{
 		return (0);
@@ -60,31 +65,28 @@ int _isalpha(int c)
 
 int _atoi(char *s)
 {
-	int st = 0;
-	int code = 1, fl = 0;
-	int end;
-	unsigned int resu = 0;
+	int x, sign = 1, flag = 0, output;
+	unsigned int result = 0;
 
-	while (s[st] != '\0' && fl != 2)
+	for (x = 0; s[x] != '\0' && flag != 2; x++)
 	{
-		if (s[st] == '-')
-			code *= -1;
-		if (s[st] >= '0' && s[st] <= '9')
-		{
-			fl = 1;
-			resu *= 10;
-			resu += (s[st] - '0');
-		}
-		else if (fl == 1)
-		{
-			fl = 2;
-		}
-		st++;
-	}
-	if (code == -1)
-		end = -resu;
-	else
-		 end = resu;
+		if (s[x] == '-')
+			sign *= -1;
 
-	return (end);
+		if (s[x] >= '0' && s[x] <= '9')
+		{
+			flag = 1;
+			result *= 10;
+			result += (s[x] - '0');
+		}
+		else if (flag == 1)
+			flag = 2;
+	}
+
+	if (sign == -1)
+		output = -result;
+	else
+		output = result;
+
+	return (output);
 }
