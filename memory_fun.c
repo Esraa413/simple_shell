@@ -6,16 +6,16 @@
 
 /**
  * bfree - function to free the pointer
- * @ptr: input
+ * @p: input
  * Return: return 1 if freed
 */
 
-int bfree(void **ptr)
+int bfree(void **p)
 {
-	if (ptr && *ptr)
+	if (p && *p)
 	{
-		free(*ptr);
-		*ptr = NULL;
+		free(*p);
+		*p = NULL;
 		return (1);
 	}
 	return (0);
