@@ -85,13 +85,13 @@ int print_alias(list_t *node)
 		a = node->str;
 		while (a <= p)
 		{
-			a++;
-		}
 		_putchar(*a);
 		_putchar('\'');
 		_puts(p + 1);
 		_puts("'\n");
 		return (0);
+		}
+		a++;
 	}
 	return (1);
 }
