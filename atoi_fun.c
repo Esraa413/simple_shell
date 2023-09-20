@@ -24,9 +24,9 @@ int is_delim(char c, char *delim)
 {
 	int x;
 
-	for (x = 0; delim[x]; x++)
+	for (x = 0; *delim; x++)
 	{
-		if (delim[x]++ == c)
+		if (*delim++ == c)
 			return (1);
 	}
 	return (0);
@@ -41,16 +41,14 @@ int is_delim(char c, char *delim)
 
 int _isalpha(int c)
 {
-	if (c >= 'a' && c <= 'z')
-	{
-		return (1);
-	}
-	else if (c >= 'A' && c <= 'Z')
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
 	{
 		return (1);
 	}
 	else
+	{
 		return (0);
+	}
 }
 
 /**

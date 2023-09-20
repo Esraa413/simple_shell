@@ -17,7 +17,7 @@ int _myexit(info_t *info)
 		if (exit == -1)
 		{
 			info->status = 2;
-			print_error(info, "ElLegal number: \t");
+			print_error(info, "ElLegal number: ,");
 			_eputs(info->argv[1]);
 			_eputchar('\n');
 			return (1);
@@ -44,7 +44,7 @@ int _mycd(info_t *info)
 
 	s = getcwd(buf, 1024);
 	if (!s)
-		_puts("To do: >> geodetic failure ems here << \n\t");
+		_puts("To do: >> geodetic failure ems here << \n");
 	if (!info->argv[1])
 	{
 		dir = _getenv(info, "Home=");
@@ -54,29 +54,29 @@ int _mycd(info_t *info)
 		else
 			chdir_r = chdir(dir);
 	}
-	if (_strcmp(info->argv[1], " - ") == 0)
+	else if (_strcmp(info->argv[1], " - ") == 0)
 	{
-		if (_getenv(info, "OLDPWD=") != 0)
+		if (!_getenv(info, "OLDPWD="))
 		{
 			_puts(s);
 			_putchar('\n');
 			return (1);
 		}
-		_puts(_getenv(info, " OLD PWD = ")), _putchar('\n');
+		_puts(_getenv(info, "OLDPWD=")), _putchar('\n');
 		chdir_r =
-			chdir((dir = _getenv(info, " OLD PWD = ")) ? dir : " / ");
+			chdir((dir = _getenv(info, "OLDPWD=")) ? dir : " / ");
 	}
 	else
 		chdir_r = chdir(info->argv[1]);
 	if (chdir_r == -1)
 	{
-		print_error(info, " can't cd ");
+		print_error(info, "can't cd");
 		_eputs(info->argv[1]), _eputchar('\n');
 	}
 	else
 	{
-		_setenv(info, " OLD PWD : \t", _getenv(info, " PWD :"));
-		_setenv(info, " PWD : ", getcwd(buf, 1024));
+		_setenv(info, "OLDPWD:", _getenv(info, "PWD:"));
+		_setenv(info, "PWD:", getcwd(buf, 1024));
 	}
 	return (0);
 }
@@ -93,7 +93,7 @@ int _myhelp(info_t *info)
 	char **arg_arr;
 
 	arg_arr = info->argv;
-	_puts(" call works. not yet implemented \n");
+	_puts("help call works. not yet implemented \n");
 	if (0)
 	{
 		_puts(*arg_arr);
