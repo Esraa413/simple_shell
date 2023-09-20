@@ -29,7 +29,7 @@ char **get_environ(info_t *info)
 int _unsetenv(info_t *info, char *var)
 {
 	list_t *node = info->env;
-	size_t i = 0;
+	size_t x = 0;
 	char *p;
 
 	if (!node || !var)
@@ -40,13 +40,13 @@ int _unsetenv(info_t *info, char *var)
 		p = starts_with(node->str, var);
 		if (p && *p == '=')
 		{
-			info->env_changed = delete_node_at_index(&(info->env), i);
-			i = 0;
+			info->env_changed = delete_node_at_index(&(info->env), x);
+			x = 0;
 			node = info->env;
 			continue;
 		}
 		node = node->next;
-		i++;
+		x++;
 	}
 	return (info->env_changed);
 }
@@ -67,11 +67,14 @@ int _setenv(info_t *info, char *var, char *value)
 	char *p;
 
 	if (!var || !value)
+	{
 		return (0);
-
+	}
 	buf = malloc(_strlen(var) + _strlen(value) + 2);
 	if (!buf)
+	{
 		return (1);
+	}
 	_strcpy(buf, var);
 	_strcat(buf, "=");
 	_strcat(buf, value);
