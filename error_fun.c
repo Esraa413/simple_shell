@@ -152,7 +152,7 @@ void remove_comments(char *buffer)
 
 	while (buffer[x] != '\0')
 	{
-		if (buffer[x] == '#' && (!x|| buffer[x - 1] == ' '))
+		if (buffer[x] == '#' && (!x || buffer[x - 1] == ' '))
 		{
 			buffer[x] = '\0';
 			break;
