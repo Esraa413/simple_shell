@@ -46,12 +46,12 @@ int is_chain(info_t *info, char *buf, size_t *p)
  * @info: input
  * @buf: buffer
  * @p: address of buffer
- * @x: starting buffer
+ * @i: starting buffer
  * @len: the length of buffer
  * Return: Void
 */
 
-void check_chain(info_t *info, char *buf, size_t *p, size_t x, size_t len)
+void check_chain(info_t *info, char *buf, size_t *p, size_t i, size_t len)
 {
 	size_t y = *p;
 
@@ -59,7 +59,7 @@ void check_chain(info_t *info, char *buf, size_t *p, size_t x, size_t len)
 	{
 		if (info->status)
 		{
-			buf[x] = 0;
+			buf[i] = 0;
 			y = len;
 		}
 	}
@@ -67,7 +67,7 @@ void check_chain(info_t *info, char *buf, size_t *p, size_t x, size_t len)
 	{
 		if (!info->status)
 		{
-			buf[x] = 0;
+			buf[i] = 0;
 			y = len;
 		}
 	}
@@ -83,11 +83,11 @@ void check_chain(info_t *info, char *buf, size_t *p, size_t x, size_t len)
 
 int replace_alias(info_t *info)
 {
-	int x;
+	int i;
 	list_t *node;
 	char *p;
 
-	for (x = 0; x < 10; x++)
+	for (i = 0; i < 10; i++)
 	{
 		node = node_starts_with(info->alias, info->argv[0], '=');
 		if (!node)
@@ -112,34 +112,34 @@ int replace_alias(info_t *info)
 
 int replace_vars(info_t *info)
 {
-	int x = 0;
+	int i = 0;
 	list_t *node;
 
-	for (x = 0; info->argv[x]; x++)
+	for (i = 0; info->argv[i]; i++)
 	{
-		if (info->argv[x][0] != '$' || !info->argv[x][1])
+		if (info->argv[i][0] != '$' || !info->argv[i][1])
 			continue;
 
-		if (!_strcmp(info->argv[x], "$?"))
+		if (!_strcmp(info->argv[i], "$?"))
 		{
-			replace_string(&(info->argv[x]),
+			replace_string(&(info->argv[i]),
 				_strdup(convert_number(info->status, 10, 0)));
 			continue;
 		}
-		if (!_strcmp(info->argv[x], "$$"))
+		if (!_strcmp(info->argv[i], "$$"))
 		{
-			replace_string(&(info->argv[x]),
+			replace_string(&(info->argv[i]),
 				_strdup(convert_number(getpid(), 10, 0)));
 			continue;
 		}
-		node = node_starts_with(info->env, &info->argv[x][1], '=');
+		node = node_starts_with(info->env, &info->argv[i][1], '=');
 		if (node)
 		{
-			replace_string(&(info->argv[x]),
+			replace_string(&(info->argv[i]),
 				_strdup(_strchr(node->str, '=') + 1));
 			continue;
 		}
-		replace_string(&info->argv[x], _strdup(""));
+		replace_string(&info->argv[i], _strdup(""));
 
 	}
 	return (0);
