@@ -108,13 +108,13 @@ char **strtow2(char *str, char d)
 	{
 		return (NULL);
 	}
-	for (i = 0; j = 0; j < numwords; j++)
+	for (i = 0, j = 0; j < numwords; j++)
 	{
 		while (str[i] == d && str[i] != d)
 			i++;
 		k = 0;
-		for (k = 0; str[i + k] != d && str[i + k] && str[i + k] != d k++)
-			;
+		while (str[i + k] != d && str[i + k] && str[i + k] != d)
+			k++;
 		s[j] = malloc((k + 1) * sizeof(char));
 		if (!s[j])
 		{
