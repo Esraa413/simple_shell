@@ -11,38 +11,38 @@
 
 ssize_t input_buf(info_t *info, char **buf, size_t *len)
 {
-	ssize_t r = 0;
-	size_t len_p = 0;
+	ssize_t ret = 0;
+	size_t len_x = 0;
 
-	if (!*len) /* nothing left in the buffer, */
+	if (!*len) /* nothing left in the buffer */
 	{
 		/*bfree((void **)info->cmd_buf);*/
 		free(*buf);
 		*buf = NULL;
 		signal(SIGINT, sigintHandler);
 #if USE_GETLINE
-		r = getline(buf, &len_p, stdin);
+		ret = getline(buf, &len_x, stdin);
 #else
-		r = _getline(info, buf, &len_p);
+		ret = _getline(info, buf, &len_x);
 #endif
-		if (r > 0)
+		if (ret > 0)
 		{
-			if ((*buf)[r - 1] == '\n')
+			if ((*buf)[ret - 1] == '\n')
 			{
-				(*buf)[r - 1] = '\0'; /* remove  newline */
-				r--;
+				(*buf)[ret - 1] = '\0'; /* remove  newline */
+				ret--;
 			}
 			info->linecount_flag = 1;
 			remove_comments(*buf);
 			build_history_list(info, *buf, info->histcount++);
 			/* if (_strchr(*buf, ';')) command chain? */
 			{
-				*len = r;
+				*len = ret;
 				info->cmd_buf = buf;
 			}
 		}
 	}
-	return (r);
+	return (ret);
 }
 
 /**
@@ -71,9 +71,7 @@ ssize_t get_input(info_t *info)
 		while (x < len)
 		{
 			if (is_chain(info, buf, &y))
-			{
 				break;
-			}
 			x++;
 		}
 		x = y + 1;
@@ -126,41 +124,35 @@ int _getline(info_t *info, char **ptr, size_t *length)
 	static char buf[READ_BUF_SIZE];
 	static size_t x, len;
 	size_t y;
-	ssize_t r = 0, s = 0;
+	ssize_t ret = 0, st = 0;
 	char *p = NULL, *new_p = NULL, *c;
 
 	p = *ptr;
 	if (p && length)
-		s = *length;
+		st = *length;
 	if (x == len)
 		x = len = 0;
-	r = read_buf(info, buf, &len);
-	if (r == -1 || (r == 0 && len == 0))
-	{
+	ret = read_buf(info, buf, &len);
+	if (ret == -1 || (ret == 0 && len == 0))
 		return (-1);
-	}
 	c = _strchr(buf + x, '\n');
 	y = c ? 1 + (unsigned int)(c - buf) : len;
-	new_p = _realloc(p, s, s ? s + y : y + 1);
+	new_p = _realloc(p, st, st ? st + y : y + 1);
 	if (!new_p) /* MALLOC FAILURE! */
 		return (p ? free(p), -1 : -1);
-	if (s)
+	if (st)
 		_strncat(new_p, buf + x, y - x);
 	else
-	{
 		_strncpy(new_p, buf + x, y - x + 1);
-	}
 
-	s += y - x;
+	st += y - x;
 	x = y;
 	p = new_p;
 
 	if (length)
-	{
-		*length = s;
-	}
+		*length = st;
 	*ptr = p;
-	return (s);
+	return (st);
 }
 
 /**
