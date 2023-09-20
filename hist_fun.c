@@ -38,24 +38,26 @@ char *get_history_file(info_t *info)
 
 int write_history(info_t *info)
 {
-	ssize_t fd;
+	ssize_t file;
 	char *filename = get_history_file(info);
 	list_t *node = NULL;
 
 	if (!filename)
+	{
 		return (-1);
+	}
 
-	fd = open(filename, O_CREAT | O_TRUNC | O_RDWR, 0644);
+	file = open(filename, O_CREAT | O_TRUNC | O_RDWR, 0644);
 	free(filename);
-	if (fd == -1)
+	if (file == -1)
 		return (-1);
 	for (node = info->history; node; node = node->next)
 	{
-		_putsfd(node->str, fd);
-		_putfd('\n', fd);
+		_putsfd(node->str, file);
+		_putfd('\n', file);
 	}
-	_putfd(BUF_FLUSH, fd);
-	close(fd);
+	_putfd(BUF_FLUSH, file);
+	close(file);
 	return (1);
 }
 
@@ -67,14 +69,13 @@ int write_history(info_t *info)
  */
 int read_history(info_t *info)
 {
-	int i, last = 0, linecount = 0;
+	int x, end = 0, linecount = 0;
 	ssize_t fd, rdlen, fsize = 0;
 	struct stat st;
 	char *buf = NULL, *filename = get_history_file(info);
 
 	if (!filename)
 		return (0);
-
 	fd = open(filename, O_RDONLY);
 	free(filename);
 	if (fd == -1)
@@ -91,15 +92,15 @@ int read_history(info_t *info)
 	if (rdlen <= 0)
 		return (free(buf), 0);
 	close(fd);
-	for (i = 0; i < fsize; i++)
-		if (buf[i] == '\n')
+	for (x = 0; x < fsize; x++)
+		if (buf[x] == '\n')
 		{
-			buf[i] = 0;
-			build_history_list(info, buf + last, linecount++);
-			last = i + 1;
+			buf[x] = 0;
+			build_history_list(info, buf + end, linecount++);
+			end = x + 1;
 		}
-	if (last != i)
-		build_history_list(info, buf + last, linecount++);
+	if (end != x)
+		build_history_list(info, buf + end, linecount++);
 	free(buf);
 	info->histcount = linecount;
 	while (info->histcount-- >= HIST_MAX)
@@ -122,11 +123,15 @@ int build_history_list(info_t *info, char *buf, int linecount)
 	list_t *node = NULL;
 
 	if (info->history)
+	{
 		node = info->history;
+	}
 	add_node_end(&node, buf, linecount);
 
 	if (!info->history)
+	{
 		info->history = node;
+	}
 	return (0);
 }
 
@@ -140,12 +145,13 @@ int build_history_list(info_t *info, char *buf, int linecount)
 int renumber_history(info_t *info)
 {
 	list_t *node = info->history;
-	int i = 0;
+	int x = 0;
 
 	while (node)
 	{
-		node->num = i++;
+		node->num = x++;
 		node = node->next;
 	}
-	return (info->histcount = i);
+
+	return (info->histcount = x);
 }
