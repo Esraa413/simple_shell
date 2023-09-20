@@ -66,7 +66,7 @@ int _mycd(info_t *info)
 	}
 	else
 		ch_r = chdir(info->argv[1]);
-	if (chdir_ret == -1)
+	if (ch_r == -1)
 	{
 		print_error(info, "can't cd to ");
 		_eputs(info->argv[1]), _eputchar('\n');
