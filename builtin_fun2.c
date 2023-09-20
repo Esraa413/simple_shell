@@ -53,8 +53,6 @@ int unset_alias(info_t *info, char *str)
 int set_alias(info_t *info, char *str)
 {
 	char *p;
-	int x;
-	int y;
 
 	p = _strchr(str, '=');
 	if (!p)
@@ -115,7 +113,7 @@ int _myalias(info_t *info)
 	if (info->argc == 1)
 	{
 		node = info->alias;
-		for (node;)
+		while (node)
 		{
 			print_alias(node);
 			node = node->next;

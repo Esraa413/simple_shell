@@ -11,7 +11,6 @@ int _erratoi(char *s)
 {
 	int x = 0;
 	unsigned long int resu = 0;
-	int end;
 
 	if (*s == '+')
 	{
@@ -23,7 +22,7 @@ int _erratoi(char *s)
 		{
 			resu *= 10;
 			resu += (s[x] - '0');
-			if (resu > 4096)
+			if (resu > INT_MAX)
 			{
 				return (-1);
 			}
@@ -32,9 +31,8 @@ int _erratoi(char *s)
 		}
 		x++;
 	}
-	end = (resu * 10);
-	end = (s[x] - '0');
-	return (end);
+
+	return (resu);
 }
 /**
  * print_error - error message
@@ -112,26 +110,25 @@ int print_d(int input, int fd)
 char *convert_number(long int num, int base, int flags)
 {
 	static char *arr;
-	static char buf[50];
+	static char buffer[50];
 	unsigned long x = num;
 	char signal = 0;
 	char *ptr;
 
-	if (!(flags & 2) && (num < 0))
+	if (!(flags & CONVERT_UNSIGNED) && (num < 0))
 	{
 		x = -num;
 		signal = '-';
 	}
 
 	arr = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
-	ptr = &buf[49];
+	ptr = &buffer[49];
 	*ptr = '\0';
-
-	while (x != 0)
-	{
+       
+	do {
 		*--ptr = arr[x % base];
 		x /= base;
-	}
+	} while (x != 0);
 	if (signal)
 	{
 		*--ptr = signal;
@@ -146,15 +143,15 @@ char *convert_number(long int num, int base, int flags)
  * Return: Always 0;
  */
 
-void remove_comments(char *buffer)
+void remove_comments(char *buf)
 {
 	int x = 0;
 
-	while (buffer[x] != '\0')
+	while (buf[x] != '\0')
 	{
-		if (buffer[x] == '#' && (!x || buffer[x - 1] == ' '))
+		if (buf[x] == '#' && (!x || buf[x - 1] == ' '))
 		{
-			buffer[x] = '\0';
+			buf[x] = '\0';
 			break;
 		}
 		x++;

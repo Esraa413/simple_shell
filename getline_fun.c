@@ -11,35 +11,38 @@
 
 ssize_t input_buf(info_t *info, char **buf, size_t *len)
 {
-	size_t leng = 0;
-	ssize_t input = 0;
+	ssize_t r = 0;
+	size_t len_p = 0;
 
-	if (!*len)
+	if (!*len) /* if nothing left in the buffer, fill it */
 	{
+		/*bfree((void **)info->cmd_buf);*/
 		free(*buf);
 		*buf = NULL;
 		signal(SIGINT, sigintHandler);
-
-		input = getline(buf, &leng, stdin);
-		input = _getline(info, buf, &leng);
-
-		if (input > 0)
+#if USE_GETLINE
+		r = getline(buf, &len_p, stdin);
+#else
+		r = _getline(info, buf, &len_p);
+#endif
+		if (r > 0)
 		{
-			if ((*buf)[input - 1] == '\n')
+			if ((*buf)[r - 1] == '\n')
 			{
-				(*buf)[input - 1] = '\0';
-				input--;
+				(*buf)[r - 1] = '\0'; /* remove trailing newline */
+				r--;
 			}
 			info->linecount_flag = 1;
 			remove_comments(*buf);
 			build_history_list(info, *buf, info->histcount++);
+			/* if (_strchr(*buf, ';')) is this a command chain? */
 			{
-				*len = input;
+				*len = r;
 				info->cmd_buf = buf;
 			}
 		}
 	}
-	return (input);
+	return (r);
 }
 
 /**
@@ -51,38 +54,37 @@ ssize_t input_buf(info_t *info, char **buf, size_t *len)
 
 ssize_t get_input(info_t *info)
 {
-	static size_t x, y, leng;
 	static char *buf;
-	ssize_t output = 0;
+	static size_t i, j, len;
+	ssize_t r = 0;
 	char **buf_p = &(info->arg), *p;
 
-	_putchar(-1);
-	output = input_buf(info, &buf, &leng);
-
-	if (output == -1)
-	{
+	_putchar(BUF_FLUSH);
+	r = input_buf(info, &buf, &len);
+	if (r == -1)
 		return (-1);
-	}
-	if (leng)
+	if (len)
 	{
-		p = buf + x;
-		check_chain(info, buf, &y, x, leng);
-		for (y = 0; y < leng; y++)
+		j = i;
+		p = buf + i;
+		check_chain(info, buf, &j, i, len);
+		while (j < len)
 		{
-			if (is_chain(info, buf, &y))
+			if (is_chain(info, buf, &j))
 				break;
+			j++;
 		}
-		x = y + 1;
-		if (x >= leng)
+		i = j + 1;
+		if (i >= len)
 		{
-			x = leng = 0;
-			info->cmd_buf_type = 0;
+			i = len = 0;
+			info->cmd_buf_type = CMD_NORM;
 		}
 		*buf_p = p;
 		return (_strlen(p));
 	}
 	*buf_p = buf;
-	return (output);
+	return (r);
 }
 
 /**
@@ -96,18 +98,14 @@ ssize_t get_input(info_t *info)
 
 ssize_t read_buf(info_t *info, char *buf, size_t *i)
 {
-	ssize_t output = 0;
+	ssize_t r = 0;
 
-	if (i)
-	{
+	if (*i)
 		return (0);
-	}
-	output = read(info->readfd, buf, 1024);
-	if (output)
-	{
-		*i = output;
-	}
-	return (output);
+	r = read(info->readfd, buf, READ_BUF_SIZE);
+	if (r >= 0)
+		*i = r;
+	return (r);
 }
 
 /**
@@ -121,42 +119,38 @@ ssize_t read_buf(info_t *info, char *buf, size_t *i)
 
 int _getline(info_t *info, char **ptr, size_t *length)
 {
-	static size_t x, leng;
-	size_t y, output = 0, j = 0;
-	static char buf[1024];
-	char *p = NULL, *new_p = NULL;
-	char *c;
+	static char buf[READ_BUF_SIZE];
+	static size_t i, len;
+	size_t k;
+	ssize_t r = 0, s = 0;
+	char *p = NULL, *new_p = NULL, *c;
 
 	p = *ptr;
 	if (p && length)
-		j = *length;
-	if (x == leng)
-	{
-		x = leng = 0;
-	}
-	output = read_buf(info, buf, &leng);
-	if (output)
+		s = *length;
+	if (i == len)
+		i = len = 0;
+	r = read_buf(info, buf, &len);
+	if (r == -1 || (r == 0 && len == 0))
 		return (-1);
-	if (output == 0 && leng == 0)
-		return (-1);
-	c = strchr(buf + x, '\n');
-	y = c ? 1 + (unsigned int)(c - buf) : leng;
-	new_p = _realloc(p, j, j ? j + y : y + 1);
-	if (!new_p)
-	{
+	c = _strchr(buf + i, '\n');
+	k = c ? 1 + (unsigned int)(c - buf) : len;
+	new_p = _realloc(p, s, s ? s + k : k + 1);
+	if (!new_p) /* MALLOC FAILURE! */
 		return (p ? free(p), -1 : -1);
-	}
-	if (j)
-		_strncat(new_p, buf + x, y - x);
+	if (s)
+		_strncat(new_p, buf + i, k - i);
 	else
-		_strncpy(new_p, buf + x, y - x + 1);
-	j += y - x;
-	x = y;
+		_strncpy(new_p, buf + i, k - i + 1);
+
+	s += k - i;
+	i = k;
 	p = new_p;
+
 	if (length)
-		*length = j;
+		*length = s;
 	*ptr = p;
-	return (j);
+	return (s);
 }
 
 /**
