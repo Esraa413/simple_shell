@@ -14,9 +14,9 @@
 int hsh(info_t *info, char **av)
 {
 	ssize_t m = 0;
-	int builtin_r = 0;
+	int builtin_ret = 0;
 
-	while (m != -1 && builtin_r != -2)
+	while (m != -1 && builtin_ret != -2)
 	{
 		clear_info(info);
 		if (interactive(info))
@@ -26,8 +26,8 @@ int hsh(info_t *info, char **av)
 		if (m != -1)
 		{
 			set_info(info, av);
-			builtin_r = find_builtin(info);
-			if (builtin_r == -1)
+			builtin_ret = find_builtin(info);
+			if (builtin_ret == -1)
 				find_cmd(info);
 		}
 		else if (interactive(info))
@@ -38,13 +38,13 @@ int hsh(info_t *info, char **av)
 	free_info(info, 1);
 	if (!interactive(info) && info->status)
 		exit(info->status);
-	if (builtin_r == -2)
+	if (builtin_ret == -2)
 	{
 		if (info->err_num == -1)
 			exit(info->status);
 		exit(info->err_num);
 	}
-	return (builtin_r);
+	return (builtin_ret);
 }
 
 /**
@@ -55,7 +55,7 @@ int hsh(info_t *info, char **av)
 
 int find_builtin(info_t *info)
 {
-	int x, built_in_r = -1;
+	int x, built_in_ret = -1;
 	builtin_table builtintbl[] = {
 		{"exit", _myexit},
 		{"env", _myenv},
@@ -72,10 +72,10 @@ int find_builtin(info_t *info)
 		if (_strcmp(info->argv[0], builtintbl[x].type) == 0)
 		{
 			info->line_count++;
-			built_in_r = builtintbl[x].func(info);
+			built_in_ret = builtintbl[x].func(info);
 			break;
 		}
-	return (built_in_r);
+	return (built_in_ret);
 }
 
 /**
