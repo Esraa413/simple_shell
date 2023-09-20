@@ -14,7 +14,7 @@ ssize_t input_buf(info_t *info, char **buf, size_t *len)
 	ssize_t ret = 0;
 	size_t len_x = 0;
 
-	if (!*len) /* nothing left in the buffer */
+	if (!*len) /*if  nothing left in  buffer, fill */
 	{
 		/*bfree((void **)info->cmd_buf);*/
 		free(*buf);
@@ -35,7 +35,7 @@ ssize_t input_buf(info_t *info, char **buf, size_t *len)
 			info->linecount_flag = 1;
 			remove_comments(*buf);
 			build_history_list(info, *buf, info->histcount++);
-			/* if (_strchr(*buf, ';')) command chain? */
+			/* if (_strchr(*buf, ';')) is command chain? */
 			{
 				*len = ret;
 				info->cmd_buf = buf;
@@ -54,19 +54,19 @@ ssize_t input_buf(info_t *info, char **buf, size_t *len)
 
 ssize_t get_input(info_t *info)
 {
-	static char *buf;
+	static char *buf; /* the ';' command  buffer */
 	static size_t x, y, len;
 	ssize_t ret = 0;
 	char **buf_p = &(info->arg), *p;
 
 	_putchar(BUF_FLUSH);
 	ret = input_buf(info, &buf, &len);
-	if (ret == -1)
+	if (ret == -1) /*EOF*/
 		return (-1);
-	if (len)
+	if (len) /* we have commands left in chain buffer */
 	{
-		y = x;
-		p = buf + x;
+		y = x; /* init iterator to current buffer position */
+		p = buf + x; /* get pointer to return */
 		check_chain(info, buf, &y, x, len);
 		while (x < len)
 		{
@@ -74,17 +74,17 @@ ssize_t get_input(info_t *info)
 				break;
 			x++;
 		}
-		x = y + 1;
-		if (x >= len)
+		x = y + 1; /* increment  nulled ';'' */
+		if (x >= len) /* reached end of buffer? */
 		{
-			x = len = 0;
+			x = len = 0; /* reset posit and length */
 			info->cmd_buf_type = CMD_NORM;
 		}
-		*buf_p = p;
-		return (_strlen(p));
+		*buf_p = p; /* pass back  a pointer to current command posit */
+		return (_strlen(p)); /* return length of a current */
 	}
-	*buf_p = buf;
-	return (ret);
+	*buf_p = buf; /* else not chain,  back buffer from  a _getline() */
+	return (ret); /* return length a buffer from  a _getline() */
 }
 
 /**
@@ -101,9 +101,7 @@ ssize_t read_buf(info_t *info, char *buf, size_t *i)
 	ssize_t ret = 0;
 
 	if (*i)
-	{
 		return (0);
-	}
 	ret = read(info->readfd, buf, READ_BUF_SIZE);
 	if (ret >= 0)
 		*i = ret;
@@ -135,6 +133,7 @@ int _getline(info_t *info, char **ptr, size_t *length)
 	ret = read_buf(info, buf, &len);
 	if (ret == -1 || (ret == 0 && len == 0))
 		return (-1);
+
 	c = _strchr(buf + x, '\n');
 	y = c ? 1 + (unsigned int)(c - buf) : len;
 	new_p = _realloc(p, st, st ? st + y : y + 1);
