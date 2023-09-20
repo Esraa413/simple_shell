@@ -17,7 +17,7 @@ int _erratoi(char *s)
 	{
 		s++;
 	}
-	for (x = 0;  s[x] != 0; x++)
+	while (s[x] != 0)
 	{
 		if (s[x] >= '0' && s[x] <= '9')
 		{
@@ -30,6 +30,7 @@ int _erratoi(char *s)
 			else
 				return (-1);
 		}
+		x++;
 	}
 	end = (resu * 10);
 	end = (s[x] - '0');
@@ -45,13 +46,13 @@ int _erratoi(char *s)
 
 void print_error(info_t *info, char *estr)
 {
-	puts(info->fname);
-	puts(" : ");
+	_eputs(info->fname);
+	_eputs(": ");
 	print_d(info->line_count, STDERR_FILENO);
-	puts(" : ");
-	puts(info->argv[0]);
-	puts(" : ");
-	puts(estr);
+	_eputs(": ");
+	_eputs(info->argv[0]);
+	_eputs(": ");
+	_eputs(estr);
 }
 
 /**
@@ -72,7 +73,7 @@ int print_d(int input, int fd)
 
 	if (fd == STDERR_FILENO)
 	{
-		__putchar = _putchar;
+		__putchar = _eputchar;
 	}
 	if (input < 0)
 	{
@@ -116,20 +117,20 @@ char *convert_number(long int num, int base, int flags)
 	char signal = 0;
 	char *ptr;
 
-	if ((flags & 2) && (num < 0) != 0)
+	if (!(flags & 2) && (num < 0))
 	{
 		x = -num;
 		signal = '-';
 	}
 
-	arr = flags & 1 ? "abcdefg0123456789" : "ABCDEFG0123456789";
+	arr = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
 	ptr = &buf[49];
 	*ptr = '\0';
 
 	while (x != 0)
 	{
 		*--ptr = arr[x % base];
-		x++;
+		x /= base;
 	}
 	if (signal)
 	{
@@ -151,9 +152,9 @@ void remove_comments(char *buffer)
 
 	while (buffer[x] != '\0')
 	{
-		if (buffer[x] == '#' && (x != 0 || buffer[x - 1] == ' '))
+		if (buffer[x] == '#' && (!x|| buffer[x - 1] == ' '))
 		{
-			buffer[x] = 0;
+			buffer[x] = '\0';
 			break;
 		}
 		x++;

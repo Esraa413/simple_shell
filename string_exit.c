@@ -1,31 +1,6 @@
 #include "shell.h"
 
 /**
- * _strchr - Specifies the location of a character in a string
- * @s: String to parse
- * @c: character to looking for
- *
- * Return: always(0)
- */
-
-char *_strchr(char *s, char c)
-{
-	int x;
-
-	for (x = 0; s[x] != '\0'; x++)
-	{
-		if (s[x] == c)
-			return (s);
-	}
-	if (c == 0)
-	{
-		return (s);
-	}
-
-	return (NULL);
-}
-
-/**
  * _strncpy - copy the string
  * @dest: Destination string to be copied to
  * @src: Source string
@@ -70,17 +45,39 @@ char *_strncat(char *dest, char *src, int n)
 
 	for (x = 0; dest[x] != '\0'; x++)
 		;
-
-	while (src[y] != '\0' && y < n)
+	for (y = 0; src[y] != '\0' && y < n; y++)
 	{
-		dest[y] = src[y];
+		dest[x] = src[y];
 		x++;
-		y++;
 	}
 	if (y < n)
 	{
 		dest[x] = '\0';
 	}
 	return (s);
+}
 
+/**
+ * _strchr - Specifies the location of a character in a string
+ * @s: String to parse
+ * @c: character to looking for
+ *
+ * Return: always(0)
+ */
+
+char *_strchr(char *s, char c)
+{
+	int x;
+
+	for (x = 0; s[x] != '\0'; x++)
+	{
+		if (s[x] == c)
+			return (s);
+	}
+	if (c == 0)
+	{
+		return (s);
+	}
+
+	return (NULL);
 }
