@@ -16,6 +16,7 @@ int _erratoi(char *s)
 		s++;  /* TODO: why  make main return 255? */
 	while (s[x] != '\0')
 	{
+		x++;
 		if (s[x] >= '0' && s[x] <= '9')
 		{
 			resu *= 10;
@@ -27,7 +28,6 @@ int _erratoi(char *s)
 		{
 			return (-1);
 		}
-		x++;
 	}
 	return (resu);
 }
