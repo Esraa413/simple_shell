@@ -11,7 +11,7 @@
 
 ssize_t input_buf(info_t *info, char **buf, size_t *len)
 {
-	ssize_t ret = 0;
+	ssize_t r = 0;
 	size_t len_p = 0;
 
 	if (!*len) /* nothing left in the buffer, */
@@ -21,28 +21,28 @@ ssize_t input_buf(info_t *info, char **buf, size_t *len)
 		*buf = NULL;
 		signal(SIGINT, sigintHandler);
 #if USE_GETLINE
-		ret = getline(buf, &len_p, stdin);
+		r = getline(buf, &len_p, stdin);
 #else
-		ret = _getline(info, buf, &len_p);
+		r = _getline(info, buf, &len_p);
 #endif
-		if (ret > 0)
+		if (r > 0)
 		{
-			if ((*buf)[ret - 1] == '\n')
+			if ((*buf)[r - 1] == '\n')
 			{
-				(*buf)[ret - 1] = '\0'; /* remove  newline */
-				ret--;
+				(*buf)[r - 1] = '\0'; /* remove  newline */
+				r--;
 			}
 			info->linecount_flag = 1;
 			remove_comments(*buf);
 			build_history_list(info, *buf, info->histcount++);
 			/* if (_strchr(*buf, ';')) command chain? */
 			{
-				*len = ret;
+				*len = r;
 				info->cmd_buf = buf;
 			}
 		}
 	}
-	return (ret);
+	return (r);
 }
 
 /**
@@ -126,7 +126,7 @@ int _getline(info_t *info, char **ptr, size_t *length)
 	static char buf[READ_BUF_SIZE];
 	static size_t x, len;
 	size_t y;
-	ssize_t ret = 0, s = 0;
+	ssize_t r = 0, s = 0;
 	char *p = NULL, *new_p = NULL, *c;
 
 	p = *ptr;
@@ -134,8 +134,8 @@ int _getline(info_t *info, char **ptr, size_t *length)
 		s = *length;
 	if (x == len)
 		x = len = 0;
-	ret = read_buf(info, buf, &len);
-	if (ret == -1 || (ret == 0 && len == 0))
+	r = read_buf(info, buf, &len);
+	if (r == -1 || (r == 0 && len == 0))
 	{
 		return (-1);
 	}
