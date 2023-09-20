@@ -12,7 +12,7 @@
 ssize_t input_buf(info_t *info, char **buf, size_t *len)
 {
 	ssize_t ret = 0;
-	size_t len_x = 0;
+	size_t len_p = 0;
 
 	if (!*len) /* nothing left in the buffer, */
 	{
@@ -21,9 +21,9 @@ ssize_t input_buf(info_t *info, char **buf, size_t *len)
 		*buf = NULL;
 		signal(SIGINT, sigintHandler);
 #if USE_GETLINE
-		ret = getline(buf, &len_x, stdin);
+		ret = getline(buf, &len_p, stdin);
 #else
-		ret = _getline(info, buf, &len_x);
+		ret = _getline(info, buf, &len_p);
 #endif
 		if (ret > 0)
 		{
@@ -126,12 +126,12 @@ int _getline(info_t *info, char **ptr, size_t *length)
 	static char buf[READ_BUF_SIZE];
 	static size_t x, len;
 	size_t y;
-	ssize_t ret = 0, st = 0;
+	ssize_t ret = 0, s = 0;
 	char *p = NULL, *new_p = NULL, *c;
 
 	p = *ptr;
 	if (p && length)
-		st = *length;
+		s = *length;
 	if (x == len)
 		x = len = 0;
 	ret = read_buf(info, buf, &len);
@@ -141,26 +141,26 @@ int _getline(info_t *info, char **ptr, size_t *length)
 	}
 	c = _strchr(buf + x, '\n');
 	y = c ? 1 + (unsigned int)(c - buf) : len;
-	new_p = _realloc(p, st, st ? st + y : y + 1);
+	new_p = _realloc(p, s, s ? s + y : y + 1);
 	if (!new_p) /* MALLOC FAILURE! */
 		return (p ? free(p), -1 : -1);
-	if (st)
+	if (s)
 		_strncat(new_p, buf + x, y - x);
 	else
 	{
 		_strncpy(new_p, buf + x, y - x + 1);
 	}
 
-	st += y - x;
+	s += y - x;
 	x = y;
 	p = new_p;
 
 	if (length)
 	{
-		*length = st;
+		*length = s;
 	}
 	*ptr = p;
-	return (st);
+	return (s);
 }
 
 /**
