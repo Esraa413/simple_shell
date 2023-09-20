@@ -13,7 +13,7 @@ int _erratoi(char *s)
 	unsigned long int resu = 0;
 
 	if (*s == '+')
-		s++;  /* TODO: why  make main return 255? */
+		s++;  /* TODO: why does this make  make main return 255? */
 	x = 0;
 	while (s[x] != '\0')
 	{
@@ -141,14 +141,12 @@ void remove_comments(char *buf)
 {
 	int x;
 
-	x = 0;
-	while (buf[x] != '\0')
+	for (x = 0; buf[x] != '\0'; x++)
 	{
 		if (buf[x] == '#' && (!x || buf[x - 1] == ' '))
 		{
 			buf[x] = '\0';
 			break;
 		}
-	x++;
 	}
 }
