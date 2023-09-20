@@ -56,10 +56,10 @@ int _isalpha(int c)
 
 int _atoi(char *s)
 {
-	int x, sign_in = 1, flag = 0, end;
+	int x = 0, sign_in = 1, flag = 0, end;
 	unsigned int resu = 0;
 
-	for (x = 0; s[x] != '\0' && flag != 2; x++)
+	while (s[x] != '\0' && flag != 2)
 	{
 		if (s[x] == '-')
 			sign_in *= -1;
@@ -71,7 +71,10 @@ int _atoi(char *s)
 			resu += (s[x] - '0');
 		}
 		else if (flag == 1)
+		{
 			flag = 2;
+		}
+		x++;
 	}
 
 	if (sign_in == -1)
